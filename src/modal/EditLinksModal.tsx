@@ -1,6 +1,6 @@
 import {ValuesModalI} from "../stores/modalStore";
 import {observer} from "mobx-react";
-import {Button, Form, Input, InputNumber, Modal} from "antd";
+import {Button, Form, Input, Modal} from "antd";
 import TextArea from "antd/es/input/TextArea";
 import * as React from "react";
 import {useForm} from "antd/es/form/Form";

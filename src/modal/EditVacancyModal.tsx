@@ -12,6 +12,7 @@ interface EditVacancyModalI {
     data: ValuesModalI,
     setShow: (value: boolean) => void
 }
+
 export const EditVacancyModal = observer(({data, setShow}: EditVacancyModalI)=>{
     const [form] = useForm();
     const submit = async ()=>{

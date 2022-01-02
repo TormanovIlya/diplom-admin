@@ -17,8 +17,7 @@ export interface NavlinksI {
 export const Navlinks: FunctionComponent = () => {
     const [navlinks,setNavLinks] = useState<NavlinksI[]>([]);
     const modal = useModal()
-    const [title,setTitle] = useState('');
-    const [description, setDescription] = useState('');
+    const [form] = Form.useForm();
     const columns = [
         {
             title: 'Id',
@@ -62,26 +61,35 @@ export const Navlinks: FunctionComponent = () => {
             }
         }).catch(()=>ErrorNotifications('Произошла ошибка при удалении ссылки'))
     }
-
     const submit = async () => {
-            const body = {title: title, description: description};
+        try{
+            await form.validateFields();
+            const data = await form.validateFields();
+            console.log(data);
+            const body = {title: data.title, description: data.description};
             await axios.post(`${config.host}:${config.api_port}/${config.endpoints.navlinks}`,body).then(res=>{
                 if(res.status === 201){
                     SuccessNotifications('Навигационная ссылка успешно создана')
                 }
-            }).catch(()=>ErrorNotifications('Произошла ошибка при создании навигационной ссылки'))
+            })
+        }
+        catch (e) {
+            ErrorNotifications('Произошла ошибка при создании навигационной ссылки')
+        }
     }
     return(
         <div style={{height: '100vh'}}>
-            <Space style={{padding: '30px'}} direction={'vertical'}>
-                <Form.Item name={'title'} label={'Заголовок'} rules={[{required: true}]}>
-                    <Input onChange={event=> setTitle(event.target.value)}/>
-                </Form.Item>
-                <Form.Item name={'description'} label={'Описание'} rules={[{required: true}]}>
-                    <TextArea onChange={event=> setDescription(event.target.value)}/>
-                </Form.Item>
-                <Button type={'primary'} onClick={submit}>Создать ссылку</Button>
-            </Space>
+            <Form form={form} initialValues={{title: '', description: ''}}>
+                <Space style={{padding: '30px'}} direction={'vertical'}>
+                    <Form.Item name={'title'} label={'Заголовок'} rules={[{required: true}]}>
+                        <Input />
+                    </Form.Item>
+                    <Form.Item name={'description'} label={'Описание'} rules={[{required: true}]}>
+                        <TextArea/>
+                    </Form.Item>
+                    <Button type={'primary'} onClick={submit}>Создать ссылку</Button>
+                </Space>
+            </Form>
             <Table dataSource={navlinks} columns={columns}/>
         </div>
     )
