@@ -14,6 +14,15 @@ export interface OrderI{
     cost: number;
     description: string;
     products: ProductI[];
+    status: boolean;
+}
+
+export const changeFeedbackStatus = async ({id, status}: {id: number, status: boolean}) => {
+    return await axios.put<FeedbackI>(`${config.host}:${config.api_port}/${config.endpoints.feedback}/change-status` , {id, status})
+}
+
+export const changeOrderStatus = async ({id, status}: {id: number, status: boolean}) => {
+    return await axios.put<OrderI>(`${config.host}:${config.api_port}/${config.endpoints.order}/change-status` , {id, status})
 }
 
 export const getFeedbacksList = async () => {

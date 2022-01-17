@@ -1,8 +1,8 @@
 import * as React from 'react'
 import {Table} from "antd";
 import {useEffect, useState} from "react";
-import {FeedbackI, getFeedbacksList} from "./messages.service";
-
+import {changeFeedbackStatus, FeedbackI, getFeedbacksList} from "./messages.service";
+import {Checkbox} from 'antd';
 
 const columns = [
     {
@@ -21,25 +21,33 @@ const columns = [
         key: 'phoneNumber',
     },
     {
-        title: 'Id',
+        title: 'Сообщение',
         dataIndex: 'text',
         key: 'text',
     },
+    {
+        title: 'Статус заявки',
+        dataIndex: 'status',
+        key: 'status',
+        render: (status: boolean, source: FeedbackI) => <Checkbox
+            defaultChecked={status}
+            onChange={(e) => changeFeedbackStatus({id: source.id, status: e.target.checked})}/>
+    }
 
 ]
 export const Feedbacks = () => {
-    const [feedbacks,setFeedbacks] = useState<FeedbackI[]>([])
+    const [feedbacks, setFeedbacks] = useState<FeedbackI[]>([])
 
-    useEffect(()=>{
-         getFeedbacksList().then(res=>{
-             if(res.status === 200){
-                 setFeedbacks(res.data)
-             }
-         })
-    },[])
-  return(
-      <div style={{height: '100vh'}}>
-          <Table dataSource={feedbacks} columns={columns}/>
-      </div>
-  )
+    useEffect(() => {
+        getFeedbacksList().then(res => {
+            if (res.status === 200) {
+                setFeedbacks(res.data)
+            }
+        })
+    }, [])
+    return (
+        <div style={{height: '100vh'}}>
+            <Table dataSource={feedbacks} columns={columns}/>
+        </div>
+    )
 }

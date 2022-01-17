@@ -1,7 +1,7 @@
 import * as React from 'react'
-import {Table} from "antd";
+import {Checkbox, Table} from "antd";
 import {useEffect, useState} from "react";
-import { getOrdersList, OrderI} from "./messages.service";
+import {changeOrderStatus, FeedbackI, getOrdersList, OrderI} from "./messages.service";
 import {ProductI} from "./product.service";
 
 const columns = [
@@ -51,6 +51,14 @@ const columns = [
                 </div>
             )}
         </div>
+    },
+    {
+        title: 'Статус заявки',
+        dataIndex: 'status',
+        key: 'status',
+        render: (status: boolean, source: OrderI) => <Checkbox
+            defaultChecked={status}
+            onChange={(e) => changeOrderStatus({id: source.id, status: e.target.checked})}/>
     }
 
 ]
